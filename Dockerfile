@@ -2,7 +2,7 @@ FROM osrf/ros:noetic-desktop-full
 
 # For consistency with later (jazzy, rolling) ROS images which are based on
 # "noble", use "ubuntu"
-ARG USER_NAME=ubuntu
+ARG USER_NAME=ubuntu 
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
@@ -15,7 +15,7 @@ RUN apt-get update \
         ros-noetic-catkin \
         sudo \
         vim \
-        wget
+        wget 
 
 # Needs to be removed because of the way ROSVENV works
 ENV ROS_DISTRO=""
@@ -23,7 +23,7 @@ ENV ROS_DISTRO=""
 COPY --chmod=0755 ./entrypoint.sh /ros_entrypoint.sh
 
 RUN  groupadd --gid ${USER_GID} ${USER_NAME} && \
-    useradd --uid ${USER_UID} --gid ${USER_GID} \
+    useradd --uid ${USER_UID} --gid ${USER_GID} \ 
             -G sudo ${USER_NAME} \
     && echo %sudo ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/nopasswd \
     && chmod 0440 /etc/sudoers.d/nopasswd
