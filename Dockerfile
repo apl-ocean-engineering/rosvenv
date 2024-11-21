@@ -27,7 +27,7 @@ RUN useradd -Ms /bin/bash $USER_NAME && \
     usermod -u $USER_ID $USER_NAME && \
     groupmod -g $USER_GID $USER_NAME && \
     echo $USER_NAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USER_NAME &&\
-    chmod 0440 /etc/sudoers.d/$USER_NAME 
+    chmod 0440 /etc/sudoers.d/$USER_NAME
 
 # Start in your home dir
 WORKDIR /home/$USER_NAME
