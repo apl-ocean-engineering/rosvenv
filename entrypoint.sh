@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+eval $( fixuid )
+
 # Move to home and source env
 unset ROS_DISTRO # Needed because ROSVENV uses this var to tell if ROS is sourced
 

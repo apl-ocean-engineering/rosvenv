@@ -49,11 +49,11 @@ rosvenv_docker_build_container() {
     else
         cd $ROSVENV_ROOT
         tag="rosvenv:latest"
-        args="--build-arg USER_NAME=$USER --build-arg USER_ID=$UID --build-arg USER_GID=$GROUPS"
     fi
 
     echo "--- Building your personal ROSVENV docker container tagged \"${tag}\" ---"
 
+    # Don't use buildkit (e.g. buildx) since it complicates building and loading images
     docker build -t $tag . $args
     docker_result=$?
 
