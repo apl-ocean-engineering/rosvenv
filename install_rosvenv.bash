@@ -1,16 +1,19 @@
 #!/bin/bash
-cp -f $(realpath "$(dirname "$BASH_SOURCE")")/rosvenv.bash "${HOME}/.rosvenv.bash"
-echo "" >> "${HOME}/.rosvenv.bash"
-cat $(realpath "$(dirname "$BASH_SOURCE")")/rosvenv_docker.bash >> "${HOME}/.rosvenv.bash"
 
+DEPLOY_BRANCH=main
+DEPLOY_REPO=https://github.com/apl-ocean-engineering/rosvenv
+ROSVENV_ROOT="${HOME}/.rosenv"
+
+# If rosvenv isn't already installed and sourced
 if [ "$( type -t createROSWS )" != "function" ]; then
-	printf "\n# ROSVENV\nsource ~/.rosvenv.bash\n" >> "${HOME}/.bashrc"
-	export ROSVENV_ROOT="$(realpath "$(dirname "$BASH_SOURCE")")"
+	git clone --depth 1 -b $DEPLOY_BRANCH $DEPLOY_REPO $ROSVENV_ROOT
+
+	printf "\n# ROSVENV\nsource ${ROSVENV_ROOT}/rosvenv.bash\nsource ${ROSVENV_ROOT}/rosvenv_docker.bash\n" >> "${HOME}/.bashrc"
 	echo "export ROSVENV_ROOT=$ROSVENV_ROOT" >> "${HOME}/.bashrc"
-	echo "Added sourcing of ~/.rosvenv.bash to your ~/.bashrc"
 fi
 
-source "${HOME}/.rosvenv.bash"
+source "${ROSVENV_ROOT}/rosvenv.bash"
+source "${ROSVENV_ROOT}/rosvenv_docker.bash"
 
 if ! _rosvenv_precheck; then
 	if rosvenv_has_docker; then
