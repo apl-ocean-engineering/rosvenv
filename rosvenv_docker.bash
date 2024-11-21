@@ -2,7 +2,7 @@
 #          ROSVENV DOCKER TOOLS
 # ========================================
 
-ROSVENV_DEFAULT_DOCKER_IMAGE="rosvenv:latest"
+ROSVENV_DEFAULT_DOCKER_IMAGE="ghcr.io/apl-ocean-engineering/rosvenv:latest"
 
 rosvenv_has_docker() {
     # Checks if docker is installed on the system.
@@ -40,27 +40,30 @@ rosvenv_docker_build_container() {
     fi
 
     if [ $# -gt 0 ]; then
+        # Build custom image
+
         cd $1
         tag=$2
         if [ $# -gt 2 ]; then
             shift 2
             args="*$"
         fi
+
+        echo "--- Building your personal ROSVENV docker container tagged \"${tag}\" ---"
+
+        # Don't use buildkit (e.g. buildx) since it complicates building and loading images
+        docker build -t $tag . $args
+        docker_result=$?
+
+        if [ $docker_result -eq 0 ]; then
+            echo "--- Successfully built your container ---"
+        else
+            echo "--- FAILURE: Please check output above ---"
+        fi
+
     else
-        cd $ROSVENV_ROOT
-        tag="rosvenv:latest"
-    fi
-
-    echo "--- Building your personal ROSVENV docker container tagged \"${tag}\" ---"
-
-    # Don't use buildkit (e.g. buildx) since it complicates building and loading images
-    docker build -t $tag . $args
-    docker_result=$?
-
-    if [ $docker_result -eq 0 ]; then
-        echo "--- Successfully built your container ---"
-    else
-        echo "--- FAILURE: Please check output above ---"
+        # Pull default image
+        docker pull $ROSVENV_DEFAULT_DOCKER_IMAGE
     fi
 
     cd $_PWD
