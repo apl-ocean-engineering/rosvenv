@@ -1,6 +1,6 @@
 # ROSVENV - A lightweight tool for isolating (and dockerizing) ROS1
 
-Have you ever found yourself begrudgingly installing python packages globally when using ROS1? Have you ever been annoyed by constantly having to configure your `ROS_IP` and `ROS_MASTER_URI` environment variables for your different robots? If your answer was "yes", then this little bash script is for you! 
+Have you ever found yourself begrudgingly installing python packages globally when using ROS1? Have you ever been annoyed by constantly having to configure your `ROS_IP` and `ROS_MASTER_URI` environment variables for your different robots? If your answer was "yes", then this little bash script is for you!
 
 **ROSVENV** is a very small set of bash scripts that help you to create and use catkin workspaces with isolated Python environments. It can source and un-source (is that even a word?) your workspace, and can configure your connection to distant ROS masters easily.
 *Even more*: With the discontinuation of support for ROS1 for Ubuntu versions beyond 20.04, ROSVENV can help you with dockerizing your ROS1 workflow so you can continue it on higher Ubuntu versions (currently tested with 22.04).
@@ -46,7 +46,7 @@ In case you used docker, use
 ```bash
 docker rm -f "$(docker ps --filter "name=_ws" -q)"
 ```
-to kill all your running workspace containers (this assumes that all your workspaces contain `_ws` in their name). 
+to kill all your running workspace containers (this assumes that all your workspaces contain `_ws` in their name).
 Use `docker image rm rosvenv:latest` to remove the ROSVENV base image. Unfortunately there is currently no way to remove all dependent images. Use `docker image list -a` to list all images and remove the undesired ones with `docker image rm image_name`.
 
 ## The ROSVENV-Commands
@@ -73,7 +73,7 @@ ws
 ├── condenv.txt (optional)
 ├── pypath (optional)
 └── src
-``` 
+```
 
 In the diagram above, you can see the `pypath` file which is marked as *optional*. This file is a copy of `~/.pypath`, if that file exists. Its purpose will be explained in the next section.
 
@@ -106,7 +106,7 @@ At times, especially after building a new package, catkin will require the works
 
 ### makeROSMaster
 
-This command will come in handy once you are ready to work with your actual robot friend. It changes the `ROS_MASTER_URI` and optionally also `ROS_IP` variables to connect you to a remote master. 
+This command will come in handy once you are ready to work with your actual robot friend. It changes the `ROS_MASTER_URI` and optionally also `ROS_IP` variables to connect you to a remote master.
 
 Usually you will simply pass the name/IP of the remote ROS master to the command:
 
@@ -155,7 +155,7 @@ Follow the official instructions for installing docker (https://docs.docker.com/
 sudo usermod -aG docker $USER
 ```
 
-After changing your membership, you'll have to log out and back in again for the change to take effect. (Sometimes a system reboot is required as well). Use `groups` to check that your membership in the `docker` group has been recognized. To check that docker has been installed successfully, run `docker run hello-world`. 
+After changing your membership, you'll have to log out and back in again for the change to take effect. (Sometimes a system reboot is required as well). Use `groups` to check that your membership in the `docker` group has been recognized. To check that docker has been installed successfully, run `docker run hello-world`.
 
 If you have an Nvidia GPU, you'll also want to install the `nvidia-container-toolkit` as described here: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html. You do not need to run the configuration step after installing the toolkit using `apt`. Simply restart the docker daemon: `sudo systemctl restart docker`.
 
@@ -163,7 +163,7 @@ If you have an Nvidia GPU, you'll also want to install the `nvidia-container-too
 
 The overall workflow with ROSVENV remains the same. `createROSWS` creates a workspace, `activateROS` activates a workspace. Docker acts as a hidden layer in both cases.
 
-To create a dockerized workspace pass the `--docker` option to `createROSWS`. By default `createROSWS` will use the `rosvenv:latest` image to do so. This is a basic image built on top of the `osrf/ros:noetic-desktop-full` image. The most important thing this small expansion does, is mirror your user details into the container so that you can work on your host system without creating weird file ownership issues. It also adds `venv` and other small tools like `git` that the base image is missing. 
+To create a dockerized workspace pass the `--docker` option to `createROSWS`. By default `createROSWS` will use the `rosvenv:latest` image to do so. This is a basic image built on top of the `osrf/ros:noetic-desktop-full` image. The most important thing this small expansion does, is mirror your user details into the container so that you can work on your host system without creating weird file ownership issues. It also adds `venv` and other small tools like `git` that the base image is missing.
 
 You can also use custom images, but you should always base them on the `rosvenv:latest` image. To create a workspace with a custom image, pass the name of the image or the path to the `Dockerfile` to `--docker` like so:
 
@@ -206,7 +206,7 @@ By default, ROSVENV mounts your home directory into the container and places you
 
 To see what is possible, please refer to the CLI documentation of [`docker run`](https://docs.docker.com/reference/cli/docker/container/run/).
 
-To enable terminal colors inside the container, uncomment `force_color_prompt=yes` inside your `~/.bashrc`. 
+To enable terminal colors inside the container, uncomment `force_color_prompt=yes` inside your `~/.bashrc`.
 
 ### rosvenvStopContainer
 
@@ -233,4 +233,3 @@ There a couple things to be aware of when using docker in combination with ROSVE
 ## Conclusion
 
 We hope this tool will support you in managing ROS workspaces and network configurations, now and in the future. If you find any issues, please file them with the repository.
- 

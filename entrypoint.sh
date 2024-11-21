@@ -11,4 +11,3 @@ cd ~
 source .bashrc
 cd $_PWD
 exec "$@"
-
