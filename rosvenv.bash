@@ -11,7 +11,7 @@ _rosvenv_precheck() {
 
 _rosvenv_print_help() {
     echo "Creates a new ROS catkin workspace under a given path."
-    echo "Will copy ~/pypath to the new ws, if the file exists." 
+    echo "Will copy ~/pypath to the new ws, if the file exists."
     echo
     echo "Arguments: nameOfnewWS [Python version=python3] [--docker [image name | Dockerfile]]"
     echo
@@ -19,7 +19,7 @@ _rosvenv_print_help() {
 
 createROSWS() {
     original_args=$@
-    
+
     ws_dir=""
     pythonCommand="python3"
     docker_image=""
@@ -95,9 +95,9 @@ createROSWS() {
                 source /opt/ros/*/setup.bash
                 echo "Sourced ${ROS_DISTRO}"
             fi
-            
+
             mkdir -p "$ws_dir/src"
-            
+
             if [ -d "$ws_dir/src" ]; then
                 if [ -f "${HOME}/.pypath" ]; then
                     cp "${HOME}/pypath" $ws_dir/
@@ -214,7 +214,7 @@ activateROS() {
         if [ $1 = "-h" ] || [ $1 = "--help" ]; then
             echo "Sources a ROS environment previously created by createROSWS."
             echo "This includes sourcing the local conda env and, optionally, extending PYTHONPATH"
-            echo 
+            echo
             echo "Arguments: [path to ws root=~/ws]"
             echo
             return
@@ -392,7 +392,7 @@ rosvenvRebuildContainer() {
         rosvenv_docker_build_container $ws_dir $image_name
     else
         echo "Cannot rebuild image of $ws_dir as workspace does not depend on rosvenv:latest and does not have a Dockerfile"
-        return -1 
+        return -1
     fi
 
     if [ $? -ne 0 ]; then
@@ -404,7 +404,7 @@ rosvenvRebuildContainer() {
 }
 
 _copy_function() {
-  test -n "$(declare -f "$1")" || return 
+  test -n "$(declare -f "$1")" || return
   eval "${_/$1/$2}"
 }
 
@@ -479,7 +479,7 @@ _loadIPDict() {
     if [ -f "${HOME}/.ros_ips" ]; then
         while IFS= read -r line; do
             ROS_IP_DICT[${line%%=*}]=${line#*=}
-        done < "${HOME}/.ros_ips"            
+        done < "${HOME}/.ros_ips"
     fi
 
     if [[ ! -z "${_ROS_WS_DIR}" ]] && [ -f "${_ROS_WS_DIR}/ros_ips" ]; then
@@ -527,7 +527,7 @@ makeROSMaster() {
             echo "Found custom IP for master '${ros_master}'"
             export ROS_IP=${ROS_IP_DICT["${ros_master}_IP"]}
         fi
-        
+
         if [ ${ROS_IP_DICT["${ros_master}_URI"]+_} ]; then
             echo "Found custom URI for master '${ros_master}'"
             export ROS_MASTER_URI=${ROS_IP_DICT["${ros_master}_URI"]}
@@ -560,27 +560,27 @@ _save_paths() {
 _restore_paths() {
     if [[ -z "${_OLD_PKG_CONFIG_PATH}" ]]; then
         unset PKG_CONFIG_PATH
-    else    
+    else
         export PKG_CONFIG_PATH=${_OLD_PKG_CONFIG_PATH}
     fi
     if [[ -z "${_OLD_CMAKE_PREFIX_PATH}" ]]; then
         unset CMAKE_PREFIX_PATH
-    else    
+    else
         export CMAKE_PREFIX_PATH=${_OLD_CMAKE_PREFIX_PATH}
     fi
     if [[ -z "${_OLD_LD_LIBRARY_PATH}" ]]; then
         unset LD_LIBRARY_PATH
-    else    
+    else
         export LD_LIBRARY_PATH=${_OLD_LD_LIBRARY_PATH}
     fi
     if [[ -z "${_OLD_PATH}" ]]; then
         unset PATH
-    else    
+    else
         export PATH=${_OLD_PATH}
     fi
     if [[ -z "${_OLD_PYTHONPATH}" ]]; then
         unset PYTHONPATH
-    else    
+    else
         export PYTHONPATH=${_OLD_PYTHONPATH}
     fi
     unset _OLD_PKG_CONFIG_PATH

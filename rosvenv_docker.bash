@@ -7,7 +7,7 @@ ROSVENV_DEFAULT_DOCKER_IMAGE="rosvenv:latest"
 rosvenv_has_docker() {
     # Checks if docker is installed on the system.
 
-    if $(command -v docker > /dev/null); then 
+    if $(command -v docker > /dev/null); then
         return 0;
     fi
     return -1
@@ -16,7 +16,7 @@ rosvenv_has_docker() {
 rosvenv_has_nvctk() {
     # Checks if docker is installed on the system.
 
-    if $(command -v nvidia-ctk > /dev/null); then 
+    if $(command -v nvidia-ctk > /dev/null); then
         return 0;
     fi
     return -1
@@ -33,7 +33,7 @@ rosvenv_docker_build_container() {
     fi
 
     _PWD=$PWD
-    
+
     if [ $# -gt 0 ] && [ $# -lt 2 ]; then
         echo "Need at least path and image tag, if overrides are given"
         return -1
@@ -54,7 +54,7 @@ rosvenv_docker_build_container() {
 
     echo "--- Building your personal ROSVENV docker container tagged \"${tag}\" ---"
 
-    docker buildx build -t $tag . $args
+    docker build -t $tag . $args
     docker_result=$?
 
     if [ $docker_result -eq 0 ]; then
