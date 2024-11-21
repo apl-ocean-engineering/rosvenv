@@ -589,3 +589,12 @@ _restore_paths() {
     unset _OLD_PATH
     unset _OLD_PYTHONPATH
 }
+
+
+updateROSEnv() {
+    _PWD=$PWD
+
+    cd $ROSVENV_ROOT && git pull
+
+    cd $_PWD
+}
