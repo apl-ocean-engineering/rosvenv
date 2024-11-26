@@ -133,9 +133,9 @@ rosvenv_docker_start_ws_container() {
 
     gpu_options=""
     if ! rosvenv_has_nvctk; then
-        echo "Found no installation of nvidia-container-toolkit, no GPU support in docker..."
+        echo "nvidia-container-toolkit not installed, no CUDA support in this docker..."
     else
-        echo "Found installation of nvidia-container-toolkit. Exposing your GPUs to the container..."
+        echo "nvidia-container-toolkit installed. Exposing your GPUs to the container..."
         gpu_options="--gpus all --env NVIDIA_VISIBLE_DEVICES=all --env NVIDIA_DRIVER_CAPABILITIES=all"
     fi
 
@@ -143,7 +143,6 @@ rosvenv_docker_start_ws_container() {
     container_name=$2
     shift 2
 
-    echo "Running docker!"
     docker run --name $container_name \
            --group-add=sudo \
            --network=host \

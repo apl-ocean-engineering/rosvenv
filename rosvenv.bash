@@ -287,10 +287,10 @@ activateROS() {
         local -A ROS_IP_DICT=$(_loadIPDict)
 
         if [ ${ROS_IP_DICT[AUTO]+_} ]; then
-            printf "ROS activated!\nAuto activating ROS master '${ROS_IP_DICT[AUTO]}'\n"
+            printf "ROS ${ROS_DISTRO} activated!\nAuto activating ROS master '${ROS_IP_DICT[AUTO]}'\n"
             makeROSMaster ${ROS_IP_DICT[AUTO]}
         else
-            printf "ROS activated!\nROS-IP: ${ROS_IP}\nROS MASTER URI: ${ROS_MASTER_URI}\n"
+            printf "ROS ${ROS_DISTRO} activated!\nROS-IP: ${ROS_IP}\nROS MASTER URI: ${ROS_MASTER_URI}\n"
         fi
 
     else
