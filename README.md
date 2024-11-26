@@ -26,19 +26,20 @@ In case you do not want to run ROSVENV in docker you need to have installed eith
 Simply source the install script:
 
 ```bash
-source path/to/rosvenv/install_rosvenv.bash
+wget -O- https://raw.githubusercontent.com/apl-ocean-engineering/rosvenv/refs/heads/main/install_rosvenv.bash | /bin/bash
 ```
 
-You can also do `./install_rosvenv.bash`, but then you'll have to re-source `.bashrc`.
 
-What did the install script just do to your system you ask? Well, it simply copied the file `rosvenv.bash` to `~/.rosvenv.bash` and added `source ~/.rosvenv.bash` to your `~/.bashrc`. Re-running the script will only perform the copy again, but will not modify your `.bashrc` unless the function `createROSWS` is nowhere to be found.
+What did the install script just do to your system you ask? Well, it cloned a copy of this repository to `~/.rosvenv` and added  `source ~/.rosvenv.bash` to your `~/.bashrc`.   By retrieving a git checkout of this repository, future upgrades only require a `git pull`.
+
 
 # Uninstall
 To uninstall rosvenv, you cat just delete `~/.rosvenv.bash` and remove the following lines from your `.bashrc`.
 ```
 # ROSVENV
-source ~/.rosvenv.bash
-export ROSVENV_ROOT=<PATH>
+source ~/.rosvenv/rosvenv.bash
+source ~/.rosvenv/rosvenv_docker.bash
+export ROSVENV_ROOT=~/.rosvenv
 ```
 
 In case you used docker, use
@@ -51,7 +52,7 @@ Use `docker image rm rosvenv:latest` to remove the ROSVENV base image. Unfortuna
 
 ## The ROSVENV-Commands
 
-ROSVENV provides a whole six (6!) commands. Let's go over them...
+ROSVENV provides a whole seven (7!) commands. Let's go over them...
 
 ### createROSWS
 
@@ -137,6 +138,10 @@ Lastly, if you do not want to always have to type the host name, you can add a `
 ### refreshROSEnvFile
 
 For editors, namely VSCode, the catkin package structure represents a problem when running Python applications in debugger or running Jupyter notebooks, as the kernels do not find catkin packages. This can be remmedied by using a `.env` file which contains the necessary environment variables to locate the packages. The `refreshROSEnvFile` automatically recovers these variables and writes them to `WS/ros.env`. You can then set this file [to be used by VSCode](https://code.visualstudio.com/docs/python/environments#_environment-variable-definitions-file). Note, that there is a separate setting [for debug configs](https://code.visualstudio.com/docs/python/debugging#_envfile), in case you run into trouble with the global setting.
+
+### updateROSEnv
+
+Will `git pull` the latest stable version of rosvenv.  It doesn't automatically load the latest version (yet), you still need to `source ~/.bashrc`
 
 ## Conclusion
 
