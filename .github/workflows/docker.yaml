@@ -14,8 +14,7 @@ on:
   workflow_dispatch:
 
 env:
-  PUSH: true
-  #${{ (github.event_name != 'pull_request') && (github.repository == 'apl-ocean-engineering/rosvenv') }}
+  PUSH: ${{ (github.event_name != 'pull_request') && (github.repository == 'apl-ocean-engineering/rosvenv') }}
 
 jobs:
   docker_build:
@@ -55,6 +54,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.5.0
