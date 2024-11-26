@@ -2,7 +2,7 @@
 #          ROSVENV DOCKER TOOLS
 # ========================================
 
-ROSVENV_DEFAULT_DOCKER_IMAGE="ghcr.io/apl-ocean-engineering/rosvenv:latest"
+ROSVENV_DEFAULT_DOCKER_IMAGE="ghcr.io/apl-ocean-engineering/rosvenv:main"
 
 rosvenv_has_docker() {
     # Checks if docker is installed on the system.
@@ -133,7 +133,7 @@ rosvenv_docker_start_ws_container() {
 
     gpu_options=""
     if ! rosvenv_has_nvctk; then
-        echo "Found no installation of nvidia-container-toolkit."
+        echo "Found no installation of nvidia-container-toolkit, no GPU support in docker..."
     else
         echo "Found installation of nvidia-container-toolkit. Exposing your GPUs to the container..."
         gpu_options="--gpus all --env NVIDIA_VISIBLE_DEVICES=all --env NVIDIA_DRIVER_CAPABILITIES=all"
@@ -143,15 +143,21 @@ rosvenv_docker_start_ws_container() {
     container_name=$2
     shift 2
 
+    echo "Running docker!"
     docker run --name $container_name \
+           --group-add=sudo \
            --network=host \
            --hostname $container_name \
+           --add-host=$container_name=127.0.0.1 \
            --env DISPLAY=$DISPLAY \
+           -u `id -u`:`id -g` \
            $gpu_options \
            $@ \
            --env QT_X11_NO_MITSHM=1 \
            -v /tmp/.X11-unix:/tmp/.X11-unix \
-           -d -v $HOME:$HOME --user $USER $image_name \
+           -v $HOME:/home/ubuntu \
+           -d \
+           $image_name \
            bash -c "while true; do sleep 0.5s; done"
 }
 
@@ -187,7 +193,9 @@ rosvenv_docker_login_wrapper() {
     shift 3
     bash_instruction="printf \"source ~/.bashrc\nunset ROS_DISTRO\nexport ROSVENV_IN_DOCKER=1\n$*\n\" > /tmp/COMMAND; bash --init-file /tmp/COMMAND"
 
-    docker exec -w $PWD -it $container_name bash -c "$bash_instruction"
+    pwd_in_docker=`echo $PWD | sed s/$USER/ubuntu/`
+
+    docker exec -w $pwd_in_docker -it $container_name bash -c "$bash_instruction"
 }
 
 rosvenv_docker_autobuild() {

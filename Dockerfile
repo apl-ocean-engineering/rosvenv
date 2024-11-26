@@ -1,11 +1,5 @@
 FROM osrf/ros:noetic-desktop-full
 
-# For consistency with later (jazzy, rolling) ROS images which are based on
-# "noble", use "ubuntu"
-ARG USER_NAME=ubuntu
-ARG USER_UID=1000
-ARG USER_GID=${USER_UID}
-
 # Adding typical tools we need or like to have
 RUN apt-get update \
     && apt-get install -q -y --no-install-recommends \
@@ -22,8 +16,17 @@ ENV ROS_DISTRO=""
 
 COPY --chmod=0755 ./entrypoint.sh /ros_entrypoint.sh
 
-RUN  groupadd --gid ${USER_GID} ${USER_NAME} && \
-    useradd --uid ${USER_UID} --gid ${USER_GID} \
+# Later (jazzy, rolling) ROS images are based on "noble"
+# "noble" images contain a built-in user "ubuntu" as uid 1000
+# so we use that name as well
+#
+# Note the sudoers file calls out "all members of group sudo"
+# so it works even if ubuntu's UID changes
+ARG USER_NAME=ubuntu
+ARG USER_UID=1000
+ARG USER_GID=${USER_UID}
+RUN groupadd --gid ${USER_GID} ${USER_NAME} && \
+    useradd  --gid ${USER_GID} --uid ${USER_UID} \
             -G sudo ${USER_NAME} \
     && echo %sudo ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/nopasswd \
     && chmod 0440 /etc/sudoers.d/nopasswd
