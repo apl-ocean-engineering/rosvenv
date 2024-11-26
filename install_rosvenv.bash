@@ -2,13 +2,14 @@
 
 DEPLOY_BRANCH=main
 DEPLOY_REPO=https://github.com/apl-ocean-engineering/rosvenv
-ROSVENV_ROOT="${HOME}/.rosvenv"
+
+ROSVENV_ROOT="~/.rosvenv"
 
 # If rosvenv isn't already installed and sourced
 if [ "$( type -t createROSWS )" != "function" ]; then
 	git clone --depth 1 -b $DEPLOY_BRANCH $DEPLOY_REPO $ROSVENV_ROOT
 
-	printf "\n# ROSVENV\nsource ${ROSVENV_ROOT}/rosvenv.bash\nsource ${ROSVENV_ROOT}/rosvenv_docker.bash\n" >> "${HOME}/.bashrc"
+	printf "\n# ROSVENV;  As the username inside Docker may not match outside, it's critical these use \"~\" not an explicit home dir\nsource ${ROSVENV_ROOT}/rosvenv.bash\nsource ${ROSVENV_ROOT}/rosvenv_docker.bash\n" >> "${HOME}/.bashrc"
 	echo "export ROSVENV_ROOT=$ROSVENV_ROOT" >> "${HOME}/.bashrc"
 fi
 

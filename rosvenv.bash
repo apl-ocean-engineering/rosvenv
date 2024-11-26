@@ -125,9 +125,9 @@ createROSWS() {
             fi
         else
             if ! $(rosvenv_docker_image_exists $ROSVENV_DEFAULT_DOCKER_IMAGE); then
-                echo "ROSVENV base image does not seem to exist. Building it..."
+                echo "ROSVENV base image does not seem to exist. Pulling it..."
                 if ! rosvenv_docker_build_container; then
-                    echo "Something went wrong while trying to build base container. Please see output above."
+                    echo "Something went wrong while trying to pull base container. Please see output above."
                     return -1
                 fi
             else
@@ -145,6 +145,8 @@ createROSWS() {
             fi
 
             container_name="$(_rosvenv_ws_path_to_name $ws_dir)"
+
+            echo "Launching docker ($docker_image) for workspace $ws_dir"
 
             rosvenv_docker_login_wrapper $docker_image $container_name $ws_dir "createROSWS" $original_args
         fi
@@ -239,6 +241,7 @@ activateROS() {
 
     if ! _rosvenv_precheck || ([ -z $ROSVENV_IN_DOCKER ] && $(_rosvenv_ws_has_docker $ws_dir)); then
         docker_image="$(_rosvenv_get_ws_image_name $ws_dir)"
+
         echo "Signing into docker ($docker_image) for workspace $ws_dir"
 
         if ! rosvenv_docker_autobuild $docker_image $ws_dir; then
