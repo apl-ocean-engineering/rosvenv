@@ -3,7 +3,7 @@
 DEPLOY_BRANCH=main
 DEPLOY_REPO=https://github.com/apl-ocean-engineering/rosvenv
 
-ROSVENV_ROOT="~/.rosvenv"
+ROSVENV_ROOT="${HOME}/.rosvenv"
 
 # If rosvenv isn't already installed and sourced
 if [ "$( type -t createROSWS )" != "function" ]; then
